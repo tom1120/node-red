@@ -15,5 +15,8 @@
     }
   },
   "author": "@testyMcTersterson",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "node-red-node-testnode": "file:"
+  }
 }

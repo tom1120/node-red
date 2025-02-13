@@ -1,9 +1,12 @@
 {
-    "name" : "lower-case",
-    "node-red" : {
+    "name": "lower-case",
+    "node-red": {
         "nodes": {
             "lower-case": "lower-case/lower-case.js"
         }
     },
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "dependencies": {
+        "lower-case": "file:"
+    }
 }

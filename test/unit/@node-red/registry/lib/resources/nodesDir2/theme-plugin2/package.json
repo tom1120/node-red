@@ -2,7 +2,6 @@
     "name": "test-theme2",
     "version": "0.0.1",
     "description": "test theme for Node-RED",
-
     "keywords": [
         "node-red",
         "plugin",
@@ -20,5 +19,8 @@
     },
     "engines": {
         "node": ">=12.x"
+    },
+    "dependencies": {
+        "test-theme2": "file:"
     }
 }

@@ -3,11 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "node-red": {
-      "plugins": {
-          "test": "test.js",
-          "test-editor-plugin": "test-editor-plugin.html",
-          "test-runtime-plugin": "test-runtime-plugin.js",
-          "library-filestore": "library-filestore.js"
-      }
+    "plugins": {
+      "test": "test.js",
+      "test-editor-plugin": "test-editor-plugin.html",
+      "test-runtime-plugin": "test-runtime-plugin.js",
+      "library-filestore": "library-filestore.js"
+    }
+  },
+  "dependencies": {
+    "test-plugin": "file:"
   }
 }

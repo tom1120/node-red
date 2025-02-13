@@ -10,5 +10,8 @@
     "test"
   ],
   "author": "@testyMcTersterson",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "regular_node": "file:"
+  }
 }

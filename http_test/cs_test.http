@@ -1,0 +1,442 @@
+### 查询可引用客服
+POST {{schema}}://{{host}}/cs/standard_list
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+    "third_type":1
+}
+
+### 创建客服，会复制引用客服的消息模板，消息模板是通用的，改了都会影响，后期消息要大改，暂时先这样
+POST {{schema}}://{{host}}/cs/create
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+    "nickname": "测试客服新绑定消息",
+    "service_code":"100",
+    # "mobile": "12345678901",
+    # "email": "12345678901@qq.com",
+    "service_agent_id": 1
+}
+
+### 客服失效
+POST {{schema}}://{{host}}/cs/delete
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+    "service_code": "1"
+}
+
+### 客服信息编辑
+POST {{schema}}://{{host}}/cs/edit
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+    "service_code":"1",
+    "nickname": "标准抖音客服",
+    "mobile": "12345678901",
+    "email": "12345678901@qq.com"
+}
+
+### 客服详情，包括绑定消息
+GET {{schema}}://{{host}}/cs/detail/40
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+
+
+### 自定义客服列表
+POST {{schema}}://{{host}}/cs/custom_list
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+    "third_type":2
+}
+
+
+### 自定义客服同步标准客服
+POST {{schema}}://{{host}}/cs/ref_cs_sync
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+    "id": 43,
+    "ref_cs_id": 1
+}
+
+
+
+### 绑定消息更新
+POST {{schema}}://{{host}}/cs/update_bind_msg
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+  "id": 2,
+  "reply_title": "欢迎词",
+  "reply_content": "HI 您好~这里是【金意陶瓷砖官方公众号】我是您的专属顾问小K，请问有什么可以帮到您？为了方便沟通，<a href=\"{{schema}}://m.qlzxb.cn/site/wxBack\">请点击提供您的昵称</a>"
+}
+
+
+
+
+
+
+### 绑定消息是否启用 id为客服详情内的ref_id  is_valid为1表启用0表禁用
+POST {{schema}}://{{host}}/cs/bind_msg_on_off
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+    "id":11,
+    "is_valid":0
+}
+
+
+### 与客服对话
+POST {{schema}}://{{host}}/cs/chat
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+    "username": "zhaoyi",
+    "tenant_id": 0,
+    "service_agent_id": 1,
+    "chat": "你好",
+    "type": "chat"
+}
+
+
+### 与客服对话，增加第三方平台写入
+POST {{schema}}://{{host}}/cs/chat
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+"username": "zhaoyi",
+"tenant_id": 0,
+"service_agent_id": 1,
+"chat": "你好",
+"type": "chat",
+"extra_json": {
+"third_type": 3,
+"third_app_id": -1,
+"third_app_name":"网页调试应用",
+"third_app_openid":"zhaoyi",
+"nick_name":"zhaoyi",
+"avatar": "//[gw.alicdn.com/tfs/TB1U7FBiAT2gK0jSZPcXXcKkpXa-108-108.jpg](http://gw.alicdn.com/tfs/TB1U7FBiAT2gK0jSZPcXXcKkpXa-108-108.jpg)"
+},
+ "no_answer": false
+}
+
+### 对话测试
+POST {{schema}}://{{host}}/cs/chat
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+        "tenant_id": 0,
+        "service_agent_id": 40,
+        "chat": "禅城区",
+        "extra_json": {
+                "create_time": "2024-12-07 15:29:11.271",
+                "message_type": "text",
+                "source": "",
+                "avatar": "{{schema}}://p26.douyinpic.com/aweme/720x720/aweme-avatar/mosaic-legacy_65a1003677e046678cde.jpeg?from=3782654143",
+                "content": "禅城区",
+                "third_app_openid": "_0000FRWWMNmb__621n6S1k5W87qo2EUDLIb",
+                "client_key": "tt2d695bd4b25e937f01",
+                "conversation_type": 1,
+                "to_user_id": "_0000FRWWMNmb__621n6S1k5W87qo2EUDLIb",
+                "conversation_id": "@4F9W0qXLCcs0a3XzNd1kE6as1WSGOvyDM5J3qQKkK1kQbfH43nDoc2Iujgn96zUFRWI4iANwEIQnAh+GtKi8fg==",
+                "nick_name": "lrq729",
+                "third_app_id": 100,
+                "event": "im_receive_msg",
+                "msg_id": "@4F9W0qXLCcs0a3XzNd1kE6as1WSGOvyGPpB3oQyhLVQbb/b01nDleGIujgn96zUFZ44uQsH9GpZ+4AsrOIyp/g==",
+                "third_app_name": "抖音小程序KITO金意陶",
+                "third_type": 1,
+                "from_user_id": "_000hLUIsr8paKZtHAP8X6J2L2VpGh94FYnz"
+        },
+        "type": "chat",
+        "username": "_000hLUIsr8paKZtHAP8X6J2L2VpGh94FYnz"
+}
+
+
+### 对话只记录不响应测试
+POST {{schema}}://{{host}}/cs/chat
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+        "tenant_id": 0,
+        "service_agent_id": 40,
+        "chat": "禅城区",
+        "extra_json": {
+                "create_time": "2024-12-07 15:29:11.271",
+                "message_type": "text",
+                "source": "",
+                "avatar": "{{schema}}://p26.douyinpic.com/aweme/720x720/aweme-avatar/mosaic-legacy_65a1003677e046678cde.jpeg?from=3782654143",
+                "content": "禅城区",
+                "third_app_openid": "_0000FRWWMNmb__621n6S1k5W87qo2EUDLIb",
+                "client_key": "tt2d695bd4b25e937f01",
+                "conversation_type": 1,
+                "to_user_id": "_0000FRWWMNmb__621n6S1k5W87qo2EUDLIb",
+                "conversation_id": "@4F9W0qXLCcs0a3XzNd1kE6as1WSGOvyDM5J3qQKkK1kQbfH43nDoc2Iujgn96zUFRWI4iANwEIQnAh+GtKi8fg==",
+                "nick_name": "lrq729",
+                "third_app_id": 100,
+                "event": "im_receive_msg",
+                "msg_id": "@4F9W0qXLCcs0a3XzNd1kE6as1WSGOvyGPpB3oQyhLVQbb/b01nDleGIujgn96zUFZ44uQsH9GpZ+4AsrOIyp/g==",
+                "third_app_name": "抖音小程序KITO金意陶",
+                "third_type": 1,
+                "from_user_id": "_000hLUIsr8paKZtHAP8X6J2L2VpGh94FYnz"
+        },
+        "type": "chat",
+        "username": "_000hLUIsr8paKZtHAP8X6J2L2VpGh94FYnz",
+        "no_answer": true
+}
+
+
+### 用户会话列表     客服id service_agent_id 
+POST {{schema}}://{{host}}/cs/conversation_list
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+    # "third_type": 2,
+    "username":"许",
+    "third_app_id":106,
+    "not_read": false,
+    "tenant_id": 0,
+    "page": 1,
+    "pagesize": 10
+}
+
+
+### 应用会话消息统计
+POST {{schema}}://{{host}}/cs/conversation_list_by_app
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+    "not_read": false,
+    # "appid_array":[100,101,109,110],
+    "tenant_id": 0
+}
+
+
+
+###  会话消息列表  conversation_id 81  username zhaoyi  _000r_1ZCBw4a-8qL0mtOii0HQSpdB2kk9Nr
+POST {{schema}}://{{host}}/cs/historypage
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+    "conversation_id":3396,
+    # "username": "_000awgSmNTbet4LPYJobUb7LkZjeh8518vN",
+    "tenant_id": 0,
+    "page": 1,
+    "pagesize": 100
+}
+
+
+### 会话重置
+POST {{schema}}://{{host}}/cs/conversation/reset
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+    "conversation_id": 81
+}
+
+### 客服绑定知识库
+POST {{schema}}://{{host}}/cs/bindkb
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+[{
+    "service_agent_id":39,"knowledge_id":59
+},{
+    "service_agent_id":39,"knowledge_id":64
+},{
+    "service_agent_id":39,"knowledge_id":65
+}]
+
+### 客服绑定知识库向量库名称  绑定时候清空原有的再绑定 ["speechcraft_1_179_ernie_customize","speechcraft_2_118_ernie_customize","speechcraft_2_82_ernie_customize"]
+### 库不存在也是清空效果？
+POST {{schema}}://{{host}}/cs/bindkb_vector_name
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+    "service_agent_id":40,
+    "vector_names":[]
+}
+
+### 客服解绑知识库[不用]
+POST {{schema}}://{{host}}/cs/unbindkb_vector_name
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+    "service_agent_id":39,
+    "vector_names":["speechcraft_1_179_ernie_customize","speechcraft_2_118_ernie_customize","speechcraft_2_82_ernie_customize"]
+
+}
+
+
+
+### 客服关联知识库查询
+GET {{schema}}://{{host}}/cs/bind_knowledge_info?service_agent_id=39
+Authorization: Basic nr_qlong_interface Admin123456
+
+
+### 绑定知识库是否启用
+POST {{schema}}://{{host}}/cs/bind_knowledge_on_off
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+    "id":6,
+    "is_valid":1
+}
+
+
+
+### 主动推送消息给抖音用户  增加渠道标识third_type
+POST {{schema}}://{{host}}/cs/send_message_to_user
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+    
+    "third_type":1,
+    "sender_staff_id": 1,
+    "sender_staff_name":"s_zhaoyi",
+    "username":"_000r_1ZCBw4a-8qL0mtOii0HQSpdB2kk9Nr",
+    "tenant_id":0,
+    "reply_content":"测试消息1234567",
+    "type":"text"
+}
+
+### 主动推送消息给微信服务号
+POST {{schema}}://{{host}}/cs/send_message_to_user
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+    "third_type":2,
+    "send_source": 2,
+    "sender_staff_id": 1,
+    "sender_staff_name":"s_zhaoyi",
+    "username":"op7fj00kewpc5R0skELYEz_9Uh68",
+    "tenant_id":0,
+    "reply_content":"测试消息12345678",
+    "type":"text"
+}
+
+### 主动推送消息给网页
+POST {{schema}}://{{host}}/cs/send_message_to_user
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+    "third_type":3,
+    "sender_staff_id": 1,
+    "sender_staff_name":"s_zhaoyi",
+    "username":"zhaoyi",
+    "tenant_id":0,
+    "reply_content":"测试消息123456799",
+    "type":"text"
+}
+
+### 测试
+POST {{schema}}://{{host}}/cs/send_message_to_user
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{"tenant_id":0,
+"sender_staff_id":"gh_e982528094c9",
+"send_source":2,
+"type":"text",
+"reply_content":"[图文]<a href=\"http://m.qlzxb.cn/site/share_kcp_detail/id/3\">鱼肚白白<\/a>",
+"third_type":2,
+"sender_staff_name":"gh_e982528094c9",
+"username":"oN8LZjrxv9kyNhHzVLnYfwnlf2rA"
+}
+
+
+### 员工接待用户
+POST {{schema}}://{{host}}/cs/staff_can_reply_user
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+    "third_type":1,
+    "staff_id": 1,
+    "staff_name":"s_zhaoyi",
+    "username":"_000r_1ZCBw4a-8qL0mtOii0HQSpdB2kk9Nr",
+    "tenant_id":0
+}
+### 员工接待用户
+POST {{schema}}://{{host}}/cs/staff_can_reply_user
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+    "third_type":1,
+    "staff_id": 12,
+    "staff_name":"郑树武",
+    "username":"_000awgSmNTbet4LPYJobUb7LkZjeh8518vN",
+    "tenant_id":0
+}
+
+### 员工接待用户 微信服务号
+POST {{schema}}://{{host}}/cs/staff_can_reply_user
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{
+    "third_type":2,
+    "staff_id": 1,
+    "staff_name":"s_zhaoyi",
+    "username":"op7fj00kewpc5R0skELYEz_9Uh68",
+    "tenant_id":0
+}
+
+
+###测试文件
+GET {{schema}}://m.qlzxb.cn/upload/tms/file/2024/12/17/202412170316245938.docx
+
+
+### 测试文件
+GET http://static.shanhuxueyuan.com/test6.docx
+
+
+### 测试文件
+GET http://disk.qlzxb.cn/api/alien/download/4b25f08b-7828-40b6-7d91-3e65dad46e21/数联云盘操作教程(金意陶）.docx
+
+
+### 测试jpg
+GET {{schema}}://m.qlzxb.cn/upload/2023/01/03/20230103150512289.jpg
+
+
+### 测试用户消息推送客服  未发布
+POST http://127.0.0.1:1880/cs/push_msg_to_staff
+Content-Type: application/json
+Authorization: Basic nr_qlong_interface Admin123456
+
+{"third_app_id":-1,"client_user_id":"zhaoyi","content":"你好","content_time":"2025-01-04 11:38:10"}
+
+
+### 测试request获取客户端ip地址
+GET http://127.0.0.1:1880/req/client_ip
+Authorization: Basic nr_qlong_interface Admin123456
+
+
+### 测试request获取客户端ip地址
+GET {{schema}}://nr.qlongit.cn/req/client_ip
+Authorization: Basic nr_qlong_interface Admin123456
