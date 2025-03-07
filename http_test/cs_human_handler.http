@@ -1,0 +1,72 @@
+### 员工接待用户网页
+POST {{schema}}://{{host}}/cs/staff_can_reply_user
+Content-Type: application/json
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
+
+{
+    "third_type":3,
+    "staff_id": 1,
+    "staff_name":"s_zhaoyi",
+    "username":"zhaoyi",
+    "tenant_id":0,
+    "service_time_rule": 900
+}
+
+###  会话消息列表 是否显示AI参考回复  conversation_id 81  username zhaoyi  _000r_1ZCBw4a-8qL0mtOii0HQSpdB2kk9Nr
+POST {{schema}}://{{host}}/cs/historypage
+Content-Type: application/json
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
+
+{
+    "conversation_id":81,
+    # "username": "_000awgSmNTbet4LPYJobUb7LkZjeh8518vN",
+    "tenant_id": 0,
+    "page": 1,
+    "pagesize": 100
+    # "is_display_ai_reference": true
+}
+
+### 人工客服接管列表
+POST {{schema}}://{{host}}/cs/human_handler_list
+Content-Type: application/json
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
+
+{
+    # "staff_id": 1,
+    "tenant_id": 0,
+    "page": 1,
+    "pagesize": 10
+}
+
+### 强制结束接管
+POST {{schema}}://{{host}}/cs/force_end_human_handler
+Content-Type: application/json
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
+
+{
+    "handler_id": 238
+}
+
+
+### 智能客服流式对话 测试
+POST {{schema}}://{{host}}/cs/chat
+Content-Type: application/json
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
+
+{
+  "username": "zhaoyi",
+  "tenant_id": 0,
+  "service_agent_id": 1,
+  "chat": "你是谁",
+  "type": "chat",
+  "tool_choice": null,
+  "extra_json": {
+    "third_type": 3,
+    "third_app_id": -1,
+    "third_app_name": "网页调试应用",
+    "third_app_openid": "zhaoyi",
+    "nick_name": "zhaoyi",
+    "avatar": "//[gw.alicdn.com/tfs/TB1U7FBiAT2gK0jSZPcXXcKkpXa-108-108.jpg](http://gw.alicdn.com/tfs/TB1U7FBiAT2gK0jSZPcXXcKkpXa-108-108.jpg)"
+  },
+  "no_answer": false
+}

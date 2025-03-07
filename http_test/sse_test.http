@@ -1,0 +1,81 @@
+### 原始 这里插件不支持流呈现
+# @keepStreaming
+POST http://127.0.0.1:8800/api/chatDeepseek/chat_siliconflow
+Content-Type: application/json
+
+{
+  "model_name": "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+  "messages": [
+    {
+      "role": "user",
+      "content": "1、哈喽，想问一下，一般电视墙的柜子收纳什么 08-31  回复  \n\n 请将以上信息从情感分析角度评价是否对 房间室内装修 感兴趣，判断信息划分为 非常有兴趣、有兴趣、无兴趣"
+    }
+  ],
+  "stream": true
+}
+
+### 测试
+POST http://127.0.0.1:8800/api/chatKimi/chat_kimi
+Content-Type: application/json
+
+{
+  "model": "moonshot-v1-8k",
+  "messages": [
+    {
+      "role": "user",
+      "content": "1、哈喽，想问一下，一般电视墙的柜子收纳什么 08-31  回复  \n\n 请将以上信息从情感分析角度评价是否对 房间室内装修 感兴趣，判断信息划分为 非常有兴趣、有兴趣、无兴趣"
+    }
+  ],
+  "stream": true
+}
+
+### sse测试 这里插件不支持流呈现
+POST {{schema}}://{{host}}/ai_chat/complete
+Content-Type: application/json
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
+
+{
+  "model_name": "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+  "messages": [
+    {
+      "role": "user",
+      "content": "1、哈喽，想问一下，一般电视墙的柜子收纳什么 08-31  回复  \n\n 请将以上信息从情感分析角度评价是否对 房间室内装修 感兴趣，判断信息划分为 非常有兴趣、有兴趣、无兴趣"
+    }
+  ],
+  "stream": true
+}
+
+### 异步多库向量搜索
+POST {{schema}}://{{host}}/ai_chat/multi_vector_search
+Content-Type: application/json
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
+
+{
+  "collection_names": [
+    "zhuxiaobao_qa_ernie_customize"
+  ],
+  "model_type": 4,
+  "question": "为这个句子生成表示以用于检索相关文章：铺贴",
+  "vector_name": "content",
+  "top_k": 20,
+  "max_len": 3000,
+  "similarity_score": 0
+}
+
+
+### 函数调用
+POST {{schema}}://{{host}}/ai_chat/function_call
+Content-Type: application/json
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
+
+{
+  "model": "glm-4-air",
+  "messages": [
+    {
+      "role": "user",
+      "content": "美国"
+    }
+  ],
+  "tool_choice": "query_renderings"
+}
+

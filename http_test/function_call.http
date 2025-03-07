@@ -1,0 +1,23 @@
+### 函数调用
+### 与客服对话，增加函数调用
+POST {{schema}}://{{host}}/cs/chat
+Content-Type: application/json
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
+
+{
+"username": "zhaoyi",
+"tenant_id": 0,
+"service_agent_id": 1,
+"chat": "美国",
+"type": "chat",
+"tool_choice":"query_renderings",
+"extra_json": {
+"third_type": 3,
+"third_app_id": -1,
+"third_app_name":"网页调试应用",
+"third_app_openid":"zhaoyi",
+"nick_name":"zhaoyi",
+"avatar": "//[gw.alicdn.com/tfs/TB1U7FBiAT2gK0jSZPcXXcKkpXa-108-108.jpg](http://gw.alicdn.com/tfs/TB1U7FBiAT2gK0jSZPcXXcKkpXa-108-108.jpg)"
+},
+ "no_answer": false
+}

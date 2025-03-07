@@ -1,0 +1,2 @@
+GET http://127.0.0.1:1880/dashboard
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}

@@ -1,7 +1,7 @@
 ### 查询可引用客服
 POST {{schema}}://{{host}}/cs/standard_list
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     "third_type":1
@@ -10,7 +10,7 @@ Authorization: Basic nr_qlong_interface Admin123456
 ### 创建客服，会复制引用客服的消息模板，消息模板是通用的，改了都会影响，后期消息要大改，暂时先这样
 POST {{schema}}://{{host}}/cs/create
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     "nickname": "测试客服新绑定消息",
@@ -23,7 +23,7 @@ Authorization: Basic nr_qlong_interface Admin123456
 ### 客服失效
 POST {{schema}}://{{host}}/cs/delete
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     "service_code": "1"
@@ -32,7 +32,7 @@ Authorization: Basic nr_qlong_interface Admin123456
 ### 客服信息编辑
 POST {{schema}}://{{host}}/cs/edit
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     "service_code":"1",
@@ -44,14 +44,14 @@ Authorization: Basic nr_qlong_interface Admin123456
 ### 客服详情，包括绑定消息
 GET {{schema}}://{{host}}/cs/detail/40
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 
 
 ### 自定义客服列表
 POST {{schema}}://{{host}}/cs/custom_list
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     "third_type":2
@@ -61,7 +61,7 @@ Authorization: Basic nr_qlong_interface Admin123456
 ### 自定义客服同步标准客服
 POST {{schema}}://{{host}}/cs/ref_cs_sync
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     "id": 43,
@@ -73,7 +73,7 @@ Authorization: Basic nr_qlong_interface Admin123456
 ### 绑定消息更新
 POST {{schema}}://{{host}}/cs/update_bind_msg
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
   "id": 2,
@@ -89,7 +89,7 @@ Authorization: Basic nr_qlong_interface Admin123456
 ### 绑定消息是否启用 id为客服详情内的ref_id  is_valid为1表启用0表禁用
 POST {{schema}}://{{host}}/cs/bind_msg_on_off
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     "id":11,
@@ -100,7 +100,7 @@ Authorization: Basic nr_qlong_interface Admin123456
 ### 与客服对话
 POST {{schema}}://{{host}}/cs/chat
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     "username": "zhaoyi",
@@ -114,7 +114,7 @@ Authorization: Basic nr_qlong_interface Admin123456
 ### 与客服对话，增加第三方平台写入
 POST {{schema}}://{{host}}/cs/chat
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
 "username": "zhaoyi",
@@ -136,7 +136,7 @@ Authorization: Basic nr_qlong_interface Admin123456
 ### 对话测试
 POST {{schema}}://{{host}}/cs/chat
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
         "tenant_id": 0,
@@ -169,17 +169,17 @@ Authorization: Basic nr_qlong_interface Admin123456
 ### 对话只记录不响应测试
 POST {{schema}}://{{host}}/cs/chat
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
         "tenant_id": 0,
         "service_agent_id": 40,
-        "chat": "禅城区",
+        "chat": "https://p26.douyinpic.com/aweme/720x720/aweme-avatar/mosaic-legacy_65a1003677e046678cde.jpeg?from=3782654143",
         "extra_json": {
                 "create_time": "2024-12-07 15:29:11.271",
                 "message_type": "text",
                 "source": "",
-                "avatar": "{{schema}}://p26.douyinpic.com/aweme/720x720/aweme-avatar/mosaic-legacy_65a1003677e046678cde.jpeg?from=3782654143",
+                "avatar": "https://p26.douyinpic.com/aweme/720x720/aweme-avatar/mosaic-legacy_65a1003677e046678cde.jpeg?from=3782654143",
                 "content": "禅城区",
                 "third_app_openid": "_0000FRWWMNmb__621n6S1k5W87qo2EUDLIb",
                 "client_key": "tt2d695bd4b25e937f01",
@@ -196,19 +196,20 @@ Authorization: Basic nr_qlong_interface Admin123456
         },
         "type": "chat",
         "username": "_000hLUIsr8paKZtHAP8X6J2L2VpGh94FYnz",
-        "no_answer": true
+        "msgType": "image"
+        # "no_answer": true
 }
 
 
 ### 用户会话列表     客服id service_agent_id 
 POST {{schema}}://{{host}}/cs/conversation_list
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     # "third_type": 2,
-    "username":"许",
-    "third_app_id":106,
+    # "username":"许",
+    "third_app_id":["106","-1"],
     "not_read": false,
     "tenant_id": 0,
     "page": 1,
@@ -219,7 +220,7 @@ Authorization: Basic nr_qlong_interface Admin123456
 ### 应用会话消息统计
 POST {{schema}}://{{host}}/cs/conversation_list_by_app
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     "not_read": false,
@@ -232,10 +233,10 @@ Authorization: Basic nr_qlong_interface Admin123456
 ###  会话消息列表  conversation_id 81  username zhaoyi  _000r_1ZCBw4a-8qL0mtOii0HQSpdB2kk9Nr
 POST {{schema}}://{{host}}/cs/historypage
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
-    "conversation_id":3396,
+    "conversation_id":81,
     # "username": "_000awgSmNTbet4LPYJobUb7LkZjeh8518vN",
     "tenant_id": 0,
     "page": 1,
@@ -246,7 +247,7 @@ Authorization: Basic nr_qlong_interface Admin123456
 ### 会话重置
 POST {{schema}}://{{host}}/cs/conversation/reset
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     "conversation_id": 81
@@ -255,7 +256,7 @@ Authorization: Basic nr_qlong_interface Admin123456
 ### 客服绑定知识库
 POST {{schema}}://{{host}}/cs/bindkb
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 [{
     "service_agent_id":39,"knowledge_id":59
@@ -269,7 +270,7 @@ Authorization: Basic nr_qlong_interface Admin123456
 ### 库不存在也是清空效果？
 POST {{schema}}://{{host}}/cs/bindkb_vector_name
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     "service_agent_id":40,
@@ -279,7 +280,7 @@ Authorization: Basic nr_qlong_interface Admin123456
 ### 客服解绑知识库[不用]
 POST {{schema}}://{{host}}/cs/unbindkb_vector_name
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     "service_agent_id":39,
@@ -291,13 +292,13 @@ Authorization: Basic nr_qlong_interface Admin123456
 
 ### 客服关联知识库查询
 GET {{schema}}://{{host}}/cs/bind_knowledge_info?service_agent_id=39
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 
 ### 绑定知识库是否启用
 POST {{schema}}://{{host}}/cs/bind_knowledge_on_off
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     "id":6,
@@ -309,7 +310,7 @@ Authorization: Basic nr_qlong_interface Admin123456
 ### 主动推送消息给抖音用户  增加渠道标识third_type
 POST {{schema}}://{{host}}/cs/send_message_to_user
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     
@@ -325,7 +326,7 @@ Authorization: Basic nr_qlong_interface Admin123456
 ### 主动推送消息给微信服务号
 POST {{schema}}://{{host}}/cs/send_message_to_user
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     "third_type":2,
@@ -341,7 +342,7 @@ Authorization: Basic nr_qlong_interface Admin123456
 ### 主动推送消息给网页
 POST {{schema}}://{{host}}/cs/send_message_to_user
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     "third_type":3,
@@ -356,7 +357,7 @@ Authorization: Basic nr_qlong_interface Admin123456
 ### 测试
 POST {{schema}}://{{host}}/cs/send_message_to_user
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {"tenant_id":0,
 "sender_staff_id":"gh_e982528094c9",
@@ -372,19 +373,72 @@ Authorization: Basic nr_qlong_interface Admin123456
 ### 员工接待用户
 POST {{schema}}://{{host}}/cs/staff_can_reply_user
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
+
+# {
+#     "third_type":1,
+#     "staff_id": 1,
+#     "staff_name":"s_zhaoyi",
+#     "username":"_000r_1ZCBw4a-8qL0mtOii0HQSpdB2kk9Nr",
+#     "tenant_id":0
+# }
+{
+  "staff_id": 12,
+  "staff_name": "郑树武",
+  "third_type": 1,
+  "tenant_id": 0,
+  "username": "_000awgSmNTbet4LPYJobUb7LkZjeh8518vN"
+}
+
+
+### 员工接待用户网页
+POST {{schema}}://{{host}}/cs/staff_can_reply_user
+Content-Type: application/json
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
+
+{
+    "third_type":3,
+    "staff_id": 1,
+    "staff_name":"s_zhaoyi",
+    "username":"zhaoyi",
+    "tenant_id":0,
+    "service_time_rule": 900
+}
+
+### 员工接待用户抖音
+POST {{schema}}://{{host}}/cs/staff_can_reply_user
+Content-Type: application/json
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     "third_type":1,
     "staff_id": 1,
     "staff_name":"s_zhaoyi",
     "username":"_000r_1ZCBw4a-8qL0mtOii0HQSpdB2kk9Nr",
-    "tenant_id":0
+    "tenant_id":0,
+    "service_time_rule": 900
 }
+
+
+### 员工接待用户服务号
+POST {{schema}}://{{host}}/cs/staff_can_reply_user
+Content-Type: application/json
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
+
+{
+    "third_type":2,
+    "staff_id": 1,
+    "staff_name":"s_zhaoyi",
+    "username":"oN8LZjgpQRz00N_HVtY5rvQG0W9E",
+    "tenant_id":0,
+    "service_time_rule": 900
+}
+
+
 ### 员工接待用户
 POST {{schema}}://{{host}}/cs/staff_can_reply_user
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     "third_type":1,
@@ -397,7 +451,7 @@ Authorization: Basic nr_qlong_interface Admin123456
 ### 员工接待用户 微信服务号
 POST {{schema}}://{{host}}/cs/staff_can_reply_user
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     "third_type":2,
@@ -427,16 +481,16 @@ GET {{schema}}://m.qlzxb.cn/upload/2023/01/03/20230103150512289.jpg
 ### 测试用户消息推送客服  未发布
 POST http://127.0.0.1:1880/cs/push_msg_to_staff
 Content-Type: application/json
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {"third_app_id":-1,"client_user_id":"zhaoyi","content":"你好","content_time":"2025-01-04 11:38:10"}
 
 
 ### 测试request获取客户端ip地址
 GET http://127.0.0.1:1880/req/client_ip
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 
 ### 测试request获取客户端ip地址
 GET {{schema}}://nr.qlongit.cn/req/client_ip
-Authorization: Basic nr_qlong_interface Admin123456
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
