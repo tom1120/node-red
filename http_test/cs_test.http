@@ -208,9 +208,29 @@ Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     # "third_type": 2,
-    # "username":"许",
-    "third_app_id":["106","-1"],
+    "username":"zhaoyi",
+    # "third_app_id":["106","-1"],
+    "start_time": "2025-04-01",
+    # "end_time":"2025-04-06",
     "not_read": false,
+    "tenant_id": 0,
+    "page": 1,
+    "pagesize": 10
+}
+
+
+### 用户会话列表     客服id service_agent_id 
+POST {{schema}}://{{host}}/cs/conversation_list
+Content-Type: application/json
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
+
+{
+    # "third_type": 2,
+    "username":"zhaoyi",
+    # "third_app_id":["106","-1"],
+    "start_time": "2025-04-01",
+    # "end_time":"2025-04-06",
+    "not_read": true,
     "tenant_id": 0,
     "page": 1,
     "pagesize": 10
@@ -236,15 +256,31 @@ Content-Type: application/json
 Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
-    "conversation_id":81,
-    # "username": "_000awgSmNTbet4LPYJobUb7LkZjeh8518vN",
+    "conversation_id":3399,
+    # "username": "zhaoyi",
     "tenant_id": 0,
     "page": 1,
     "pagesize": 100
 }
 
 
-### 会话重置
+###  会话消息列表 增加时间段
+POST {{schema}}://{{host}}/cs/historypage
+Content-Type: application/json
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
+
+{
+    "conversation_id":3399,
+    # "username": "zhaoyi",
+    "start_time": "2025-04-01",
+    # "end_time":"2025-04-06",
+    "tenant_id": 0,
+    "page": 1,
+    "pagesize": 100
+}
+
+
+### 会话重置  调试网页81   抖音3396 、7835  企微56215
 POST {{schema}}://{{host}}/cs/conversation/reset
 Content-Type: application/json
 Authorization: Basic {{auth_user_name}} {{auth_user_password}}
@@ -346,13 +382,40 @@ Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     "third_type":3,
-    "sender_staff_id": 1,
+    "sender_staff_id": -1,
     "sender_staff_name":"s_zhaoyi",
     "username":"zhaoyi",
     "tenant_id":0,
     "reply_content":"测试消息123456799",
     "type":"text"
 }
+
+
+### 主动推送消息给网页，send_source=2/3，生成会话功能
+POST {{schema}}://{{host}}/cs/send_message_to_user
+Content-Type: application/json
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
+
+{
+    "third_type":3,
+    "sender_staff_id": -1,
+    "sender_staff_name":"s_zhaoyi",
+    "username":"zhaoyi123",
+    "tenant_id":0,
+    "reply_content":"测试消息123456799",
+    "type":"text",
+    "send_source": 3,
+    "extra_json": {
+        "conversation_type": 1,
+        "third_type": 3,
+        "third_app_id": -1,
+        "third_app_name":"网页调试应用",
+        "third_app_openid":"zhaoyi123",
+        "nick_name":"zhaoyi123",
+        "avatar": "//[gw.alicdn.com/tfs/TB1U7FBiAT2gK0jSZPcXXcKkpXa-108-108.jpg](http://gw.alicdn.com/tfs/TB1U7FBiAT2gK0jSZPcXXcKkpXa-108-108.jpg)"
+    }
+}
+
 
 ### 测试
 POST {{schema}}://{{host}}/cs/send_message_to_user

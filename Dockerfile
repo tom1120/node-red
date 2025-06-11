@@ -5,7 +5,6 @@ COPY . ./
 RUN npm config set proxy=http://192.168.96.18:7890
 RUN npm install --unsafe-perm --no-update-notifier --no-fund --only=production
 # 常用插件安裝
-RUN npm install @insectos/ssh-exec@0.3.2
 RUN npm install @ng-galien/node-red-pulsar@1.1.6
 RUN npm install node-red-contrib-cron-plus@2.1.0
 RUN npm install node-red-contrib-json-logic@2.0.1
@@ -25,6 +24,8 @@ RUN npm install dotenv@16.4.7
 RUN npm install path@0.12.7
 RUN npm install fs-extra@11.2.0
 RUN npm install dayjs@1.11.13
+RUN npm install flatted@3.3.3
+RUN npm install validate.js@0.13.1
 RUN npm config delete proxy
 # 操作系统安装
 RUN export http_proxy=http://192.168.96.18:7890 && export https_proxy=http://192.168.96.18:7890 && \

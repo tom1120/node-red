@@ -1,0 +1,9 @@
+### 测试
+POST  http://localhost:1880/test_test
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
+Content-Type: application/json
+
+{
+    "name": "test",
+    "age": "18"
+}

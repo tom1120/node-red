@@ -5,15 +5,16 @@
   "keywords": [],
   "license": "ISC",
   "node-red": {
-      "nodes": {
-          "test-subflow": "subflow.js"
-      },
-      "dependencies": [
-          "node-red-node-random"
-      ]
+    "nodes": {
+      "test-subflow": "subflow.js"
+    },
+    "dependencies": [
+      "node-red-node-random"
+    ]
   },
   "dependencies": {
-      "node-red-node-random": "*",
-      "cowsay2": "*"
+    "cowsay2": "*",
+    "node-red-node-random": "*",
+    "test-subflow-mod": "file:"
   }
 }

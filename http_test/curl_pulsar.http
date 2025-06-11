@@ -1,0 +1,12 @@
+### 测试
+# @name test
+GET http://192.168.99.14:7750/pulsar-manager/csrf-token
+
+### ccc
+@authToken = 8b4211e0-8094-400e-a4bb-31a7869c708c
+PUT http://192.168.99.14:7750/pulsar-manager/users/superuser
+X-XSRF-TOKEN: {{authToken}}
+Cookie: XSRF-TOKEN={{authToken}}
+Content-Type: application/json
+
+{"name": "admin", "password": "apachepulsar", "description": "test", "email": "username@test.org"}

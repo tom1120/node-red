@@ -1,0 +1,8 @@
+### 用户信息
+POST {{schema}}://{{host}}/cs/userinfo
+Content-Type: application/json
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
+
+{
+    "client_user_id":"zhaoyi"
+}

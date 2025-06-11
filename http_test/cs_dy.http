@@ -1,0 +1,32 @@
+### 新增关键词
+POST {{schema}}://{{host}}/cs/keyword/upsert
+Content-Type: application/json
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
+
+{
+    "keyword": "你好",
+    "content": "手机号码是多少？",
+    "content_collected":"你好！",
+    "core_factor":"phone",
+    "tenant_id": 0,
+    "image_url": "https://example.com/image.jpg",
+    "service_agent_id": 72,
+    "note":"测试"
+}
+
+### 更新关键词
+POST {{schema}}://{{host}}/cs/keyword/upsert
+Content-Type: application/json
+Authorization: Basic {{auth_user_name}} {{auth_user_password}}
+
+{
+    "id": 32,
+    "keyword": "你好",
+    "content": "手机号码是多少？",
+    "content_collected":"你好！",
+    "core_factor":"phone",
+    "tenant_id": 0,
+    "image_url": "https://example.com/image.jpg",
+    "service_agent_id": 72,
+    "note":"测试"
+}
