@@ -1,0 +1,4 @@
+FROM 192.168.99.14:8101/pgvector/pgvector:0.8.0-pg17
+CMD [ "postgres" ]
+ENTRYPOINT [ "docker-entrypoint.sh" ]
+EXPOSE 5432

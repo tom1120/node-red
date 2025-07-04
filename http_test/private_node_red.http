@@ -1,0 +1,2 @@
+### 获取私库节点目录
+GET http://127.0.0.1/catalogue.json

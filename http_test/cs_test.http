@@ -1,10 +1,11 @@
 ### 查询可引用客服
 POST {{schema}}://{{host}}/cs/standard_list
 Content-Type: application/json
-Authorization: Basic {{auth_user_name}} {{auth_user_password}}
+Authorization: Basic bnJfcWxvbmdfaW50ZXJmYWNlOkFkbWluMTIzNDU2
 
 {
-    "third_type":1
+    # "third_type":1,
+    "nickname":"抖音"
 }
 
 ### 创建客服，会复制引用客服的消息模板，消息模板是通用的，改了都会影响，后期消息要大改，暂时先这样
@@ -208,14 +209,17 @@ Authorization: Basic {{auth_user_name}} {{auth_user_password}}
 
 {
     # "third_type": 2,
-    "username":"zhaoyi",
+    # "username":"zhaoyi",
     # "third_app_id":["106","-1"],
-    "start_time": "2025-04-01",
+    # "start_time": "2025-04-01",
     # "end_time":"2025-04-06",
-    "not_read": false,
+    # "not_read": false,
     "tenant_id": 0,
     "page": 1,
-    "pagesize": 10
+    # "username":"大姐大??",
+    "pagesize": 10,
+    "query_mode":1
+
 }
 
 
