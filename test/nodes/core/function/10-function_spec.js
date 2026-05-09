@@ -390,7 +390,8 @@ describe('function node', function() {
                     msg.should.have.property('level', helper.log().ERROR);
                     msg.should.have.property('id', 'n1');
                     msg.should.have.property('type', 'function');
-                    msg.should.have.property('msg', 'ReferenceError: retunr is not defined (line 2, col 1)');
+                    msg.should.have.property('msg')
+                    msg.msg.message.should.equal('ReferenceError: retunr is not defined (line 2, col 1)');
                     done();
                 } catch(err) {
                     done(err);
@@ -659,7 +660,8 @@ describe('function node', function() {
                 msg.should.have.property('level', helper.log().ERROR);
                 msg.should.have.property('id', name);
                 msg.should.have.property('type', 'function');
-                msg.should.have.property('msg', 'Error: Callback must be a function');
+                msg.should.have.property('msg')
+                msg.msg.message.should.equal('Callback must be a function');
                 done();
             }
             catch (e) {
@@ -1449,7 +1451,7 @@ describe('function node', function() {
         });
     });
 
-    it('check if default function timeout settings are recognized', function (done) {
+    it('check if function timeout settings are recognized', function (done) {
         RED.settings.functionTimeout = 0.01;
         var flow = [{id: "n1",type: "function",timeout: RED.settings.functionTimeout,wires: [["n2"]],func: "while(1==1){};\nreturn msg;"}];
         helper.load(functionNode, flow, function () {
@@ -1469,6 +1471,65 @@ describe('function node', function() {
                     should.equal(RED.settings.functionTimeout, 0.01);
                     should.equal(msg.msg.message, 'Script execution timed out after 10ms');
                     delete RED.settings.functionTimeout;
+                    done();
+                } catch (err) {
+                    done(err);
+                }
+            }, 500);
+        });
+    });
+
+    it('check if default function timeout settings are recognized', function (done) {
+        RED.settings.globalFunctionTimeout = 0.01;
+        var flow = [{id: "n1",type: "function",wires: [["n2"]],func: "while(1==1){};\nreturn msg;"}];
+        helper.load(functionNode, flow, function () {
+            var n1 = helper.getNode("n1");
+            n1.receive({ payload: "foo", topic: "bar" });
+            setTimeout(function () {
+                try {
+                    helper.log().called.should.be.true();
+                    var logEvents = helper.log().args.filter(function (evt) {
+                        return evt[0].type == "function";
+                    });
+                    logEvents.should.have.length(1);
+                    var msg = logEvents[0][0];
+                    msg.should.have.property('level', helper.log().ERROR);
+                    msg.should.have.property('id', 'n1');
+                    msg.should.have.property('type', 'function');
+                    should.equal(RED.settings.globalFunctionTimeout, 0.01);
+                    should.equal(msg.msg.message, 'Script execution timed out after 10ms');
+                    delete RED.settings.globalFunctionTimeout;
+                    done();
+                } catch (err) {
+                    done(err);
+                }
+            }, 500);
+        });
+    });
+
+    it('check if functionTimeout has higher precedence over default function timeout setting', function (done) {
+        RED.settings.globalFunctionTimeout = 0.02;
+        RED.settings.functionTimeout = 0.01;
+        var flow = [{id: "n1",type: "function",timeout: RED.settings.functionTimeout,wires: [["n2"]],func: "while(1==1){};\nreturn msg;"}];
+        helper.load(functionNode, flow, function () {
+            var n1 = helper.getNode("n1");
+            n1.receive({ payload: "foo", topic: "bar" });
+            setTimeout(function () {
+                try {
+                    helper.log().called.should.be.true();
+                    var logEvents = helper.log().args.filter(function (evt) {
+                        return evt[0].type == "function";
+                    });
+                    logEvents.should.have.length(1);
+                    var msg = logEvents[0][0];
+                    msg.should.have.property('level', helper.log().ERROR);
+                    msg.should.have.property('id', 'n1');
+                    msg.should.have.property('type', 'function');
+                    should.equal(RED.settings.functionTimeout, 0.01);
+                    should.equal(RED.settings.globalFunctionTimeout, 0.02);
+                    should.equal(msg.msg.message, 'Script execution timed out after 10ms');
+                    delete RED.settings.functionTimeout;
+                    delete RED.settings.globalFunctionTimeout;
                     done();
                 } catch (err) {
                     done(err);
@@ -1718,9 +1779,13 @@ describe('function node', function() {
     describe("init function", function() {
 
         it('should delay handling messages until init completes', function(done) {
+            const timeoutMS = 200;
+            // Since helper.load uses process.nextTick timers might occasionally finish
+            // a couple of milliseconds too early, so give some leeway to the check.
+            const timeoutCheckMargin = 5;
             var flow = [{id:"n1",type:"function",wires:[["n2"]],initialize: `
                 return new Promise((resolve,reject) => {
-                    setTimeout(resolve,200)
+                    setTimeout(resolve, ${timeoutMS});
                 })`,
                 func:"return msg;"
             },
@@ -1733,9 +1798,10 @@ describe('function node', function() {
                     msg.delta = Date.now() - msg.payload;
                     receivedMsgs.push(msg)
                     if (receivedMsgs.length === 5) {
-                        var errors = receivedMsgs.filter(msg => msg.delta < 200)
+                        let deltas = receivedMsgs.map(msg => msg.delta);
+                        var errors = deltas.filter(delta => delta < (timeoutMS - timeoutCheckMargin))
                         if (errors.length > 0) {
-                            done(new Error(`Message received before init completed - was ${msg.delta} expected >300`))
+                            done(new Error(`Message received before init completed - delta values ${JSON.stringify(deltas)} expected to be > ${timeoutMS - timeoutCheckMargin}`))
                         } else {
                             done();
                         }

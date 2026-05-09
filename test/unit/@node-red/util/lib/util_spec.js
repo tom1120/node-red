@@ -379,10 +379,17 @@ describe("@node-red/util/util", function() {
             result = util.evaluateNodeProperty('','bool');
             result.should.be.false();
         });
-        it('returns date',function() {
+        it('returns date - default format',function() {
             var result = util.evaluateNodeProperty('','date');
             (Date.now() - result).should.be.approximately(0,50);
         });
+
+        it('returns date - iso format',function() {
+            var result = util.evaluateNodeProperty('iso','date');
+            // 2023-12-04T16:51:04.429Z
+            /^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d\.\d+Z$/.test(result).should.be.true()
+        });
+
         it('returns bin', function () {
             var result = util.evaluateNodeProperty('[1, 2]','bin');
             result[0].should.eql(1);
@@ -441,9 +448,16 @@ describe("@node-red/util/util", function() {
             },{});
             result.should.eql("123");
         });
-        it('returns jsonata result', function () {
-            var result = util.evaluateNodeProperty('$abs(-1)','jsonata',{},{});
-            result.should.eql(1);
+        it('returns jsonata result', function (done) {
+            util.evaluateNodeProperty('$abs(-1)','jsonata',{},{}, (err, result) => {
+                try {
+                    result.should.eql(1);
+                    done()
+                } catch (error) {
+                    done(error)
+                }
+
+            });
         });
         it('returns null', function() {
             var result = util.evaluateNodeProperty(null,'null');
@@ -504,8 +518,8 @@ describe("@node-red/util/util", function() {
         }
         function testToString(input,msg,expected) {
             var result = util.normalisePropertyExpression(input,msg,true);
-            console.log("+",input);
-            console.log(result);
+            // console.log("+",input);
+            // console.log(result);
             result.should.eql(expected);
         }
         it('pass a.b.c',function() { testABC('a.b.c',['a','b','c']); })
@@ -601,51 +615,105 @@ describe("@node-red/util/util", function() {
           });
       });
       describe('evaluateJSONataExpression', function() {
-          it('evaluates an expression', function() {
+          it('evaluates an expression', function(done) {
               var expr = util.prepareJSONataExpression('payload',{});
-              var result = util.evaluateJSONataExpression(expr,{payload:"hello"});
-              result.should.eql("hello");
+              util.evaluateJSONataExpression(expr,{payload:"hello"}, (err, result) => {
+                try {
+                    result.should.eql("hello");
+                    done()
+                } catch (error) {
+                    done(error)
+                }
+              });
           });
           it('evaluates a legacyMode expression', function() {
               var expr = util.prepareJSONataExpression('msg.payload',{});
-              var result = util.evaluateJSONataExpression(expr,{payload:"hello"});
-              result.should.eql("hello");
+              util.evaluateJSONataExpression(expr,{payload:"hello"}, (err, result) => {
+                try {
+                    result.should.eql("hello");
+                    done()
+                } catch (error) {
+                    done(error)
+                }
+              });
           });
           it('accesses flow context from an expression', function() {
               var expr = util.prepareJSONataExpression('$flowContext("foo")',{context:function() { return {flow:{get: function(key) { return {'foo':'bar'}[key]}}}}});
-              var result = util.evaluateJSONataExpression(expr,{payload:"hello"});
-              result.should.eql("bar");
+              util.evaluateJSONataExpression(expr,{payload:"hello"}, (err, result) => {
+                try {
+                    result.should.eql("bar");
+                    done()
+                } catch (error) {
+                    done(error)
+                }
+              });
           });
           it('accesses undefined environment variable from an expression', function() {
               var expr = util.prepareJSONataExpression('$env("UTIL_ENV")',{});
-              var result = util.evaluateJSONataExpression(expr,{});
-              result.should.eql('');
-          });
+              util.evaluateJSONataExpression(expr,{}, (err, result) => {
+                try {
+                    result.should.eql("");
+                    done()
+                } catch (error) {
+                    done(error)
+                }
+              });
+            });
           it('accesses environment variable from an expression', function() {
               process.env.UTIL_ENV = 'foo';
               var expr = util.prepareJSONataExpression('$env("UTIL_ENV")',{});
-              var result = util.evaluateJSONataExpression(expr,{});
-              result.should.eql('foo');
-          });
+              util.evaluateJSONataExpression(expr,{}, (err, result) => {
+                try {
+                    result.should.eql("foo");
+                    done()
+                } catch (error) {
+                    done(error)
+                }
+              });
+            });
           it('accesses moment from an expression', function() {
               var expr = util.prepareJSONataExpression('$moment("2020-05-27", "YYYY-MM-DD").add(7, "days").add(1, "months").format("YYYY-MM-DD")',{});
-              var result = util.evaluateJSONataExpression(expr,{});
-              result.should.eql('2020-07-03');
+              util.evaluateJSONataExpression(expr,{}, (err, result) => {
+                try {
+                    result.should.eql("2020-07-03");
+                    done()
+                } catch (error) {
+                    done(error)
+                }
+              });
           });
           it('accesses moment-timezone from an expression', function() {
               var expr = util.prepareJSONataExpression('$moment("2013-11-18 11:55Z").tz("Asia/Taipei").format()',{});
-              var result = util.evaluateJSONataExpression(expr,{});
-              result.should.eql('2013-11-18T19:55:00+08:00');
+              util.evaluateJSONataExpression(expr,{}, (err, result) => {
+                try {
+                    result.should.eql("2013-11-18T19:55:00+08:00");
+                    done()
+                } catch (error) {
+                    done(error)
+                }
+              });
           });
           it('handles non-existant flow context variable', function() {
               var expr = util.prepareJSONataExpression('$flowContext("nonExistant")',{context:function() { return {flow:{get: function(key) { return {'foo':'bar'}[key]}}}}});
-              var result = util.evaluateJSONataExpression(expr,{payload:"hello"});
-              should.not.exist(result);
-          });
+              util.evaluateJSONataExpression(expr,{payload:"hello"}, (err, result) => {
+                try {
+                    should.not.exist(result);
+                    done()
+                } catch (error) {
+                    done(error)
+                }
+              });
+            });
           it('handles non-existant global context variable', function() {
               var expr = util.prepareJSONataExpression('$globalContext("nonExistant")',{context:function() { return {global:{get: function(key) { return {'foo':'bar'}[key]}}}}});
-              var result = util.evaluateJSONataExpression(expr,{payload:"hello"});
-              should.not.exist(result);
+              util.evaluateJSONataExpression(expr,{payload:"hello"}, (err, result) => {
+                try {
+                    should.not.exist(result);
+                    done()
+                } catch (error) {
+                    done(error)
+                }
+              });
           });
           it('handles async flow context access', function(done) {
               var expr = util.prepareJSONataExpression('$flowContext("foo")',{context:function() { return {flow:{get: function(key,store,callback) { setTimeout(()=>{callback(null,{'foo':'bar'}[key])},10)}}}}});
@@ -716,9 +784,14 @@ describe("@node-red/util/util", function() {
             var result = util.encodeObject(msg);
             result.format.should.eql("error");
             var resultJson = JSON.parse(result.msg);
-            resultJson.name.should.eql('encodeError');
-            resultJson.message.should.eql('encode error');
+            resultJson.should.have.property("__enc__",true);
+            resultJson.should.have.property("type","error");
+            resultJson.should.have.property("data");
+            resultJson.data.should.have.property("name","encodeError")
+            resultJson.data.should.have.property("message","encode error")
+            resultJson.data.should.have.property("stack")
         });
+
         it('encodes Error without message', function() {
             var err = new Error();
             err.name = 'encodeError';
@@ -727,8 +800,12 @@ describe("@node-red/util/util", function() {
             var result = util.encodeObject(msg);
             result.format.should.eql("error");
             var resultJson = JSON.parse(result.msg);
-            resultJson.name.should.eql('encodeError');
-            resultJson.message.should.eql('error message');
+            resultJson.should.have.property("__enc__",true);
+            resultJson.should.have.property("type","error");
+            resultJson.should.have.property("data");
+            resultJson.data.should.have.property("name","encodeError")
+            resultJson.data.should.have.property("message","error message")
+            resultJson.data.should.have.property("stack")
         });
         it('encodes Buffer', function() {
             var msg = {msg:Buffer.from("abc")};
@@ -810,6 +887,145 @@ describe("@node-red/util/util", function() {
             resultJson.should.have.property("length",2)
         });
 
+        describe('encode typed arrays', function() {
+            it('encodes Int8Array', function () {
+                const arr = new Int8Array([1, 2, 3]);
+                const msg = { msg: arr };
+                const result = util.encodeObject(msg);
+                result.format.should.eql("Int8Array[3]");
+                const resultJson = JSON.parse(result.msg);
+                resultJson.should.have.property("__enc__", true);
+                resultJson.should.have.property("type", "array");
+                resultJson.should.have.property("data").which.eql([1, 2, 3]);
+                resultJson.should.have.property("length", 3);
+            });
+            it('encodes Uint8Array', function () {
+                const arr = new Uint8Array([4, 5, 6]);
+                const msg = { msg: arr };
+                const result = util.encodeObject(msg);
+                result.format.should.eql("Uint8Array[3]");
+                const resultJson = JSON.parse(result.msg);
+                resultJson.should.have.property("__enc__", true);
+                resultJson.should.have.property("type", "array");
+                resultJson.should.have.property("data").which.eql([4, 5, 6]);
+                resultJson.should.have.property("length", 3);
+            });
+            it('encodes Uint8ClampedArray', function () {
+                const arr = new Uint8ClampedArray([7, 8, 9]);
+                const msg = { msg: arr };
+                const result = util.encodeObject(msg);
+                result.format.should.eql("Uint8ClampedArray[3]");
+                const resultJson = JSON.parse(result.msg);
+                resultJson.should.have.property("__enc__", true);
+                resultJson.should.have.property("type", "array");
+                resultJson.should.have.property("data").which.eql([7, 8, 9]);
+                resultJson.should.have.property("length", 3);
+            });
+            it('encodes Int16Array', function () {
+                const arr = new Int16Array([10, 11, 12]);
+                const msg = { msg: arr };
+                const result = util.encodeObject(msg);
+                result.format.should.eql("Int16Array[3]");
+                const resultJson = JSON.parse(result.msg);
+                resultJson.should.have.property("__enc__", true);
+                resultJson.should.have.property("type", "array");
+                resultJson.should.have.property("data").which.eql([10, 11, 12]);
+                resultJson.should.have.property("length", 3);
+            });
+            it('encodes Uint16Array', function () {
+                const arr = new Uint16Array([13, 14, 15]);
+                const msg = { msg: arr };
+                const result = util.encodeObject(msg);
+                result.format.should.eql("Uint16Array[3]");
+                const resultJson = JSON.parse(result.msg);
+                resultJson.should.have.property("__enc__", true);
+                resultJson.should.have.property("type", "array");
+                resultJson.should.have.property("data").which.eql([13, 14, 15]);
+                resultJson.should.have.property("length", 3);
+            });
+            it('encodes Int32Array', function () {
+                const arr = new Int32Array([16, 17, 18]);
+                const msg = { msg: arr };
+                const result = util.encodeObject(msg);
+                result.format.should.eql("Int32Array[3]");
+                const resultJson = JSON.parse(result.msg);
+                resultJson.should.have.property("__enc__", true);
+                resultJson.should.have.property("type", "array");
+                resultJson.should.have.property("data").which.eql([16, 17, 18]);
+                resultJson.should.have.property("length", 3);
+            });
+            it('encodes Uint32Array', function () {
+                const arr = new Uint32Array([19, 20, 21]);
+                const msg = { msg: arr };
+                const result = util.encodeObject(msg);
+                result.format.should.eql("Uint32Array[3]");
+                const resultJson = JSON.parse(result.msg);
+                resultJson.should.have.property("__enc__", true);
+                resultJson.should.have.property("type", "array");
+                resultJson.should.have.property("data").which.eql([19, 20, 21]);
+                resultJson.should.have.property("length", 3);
+            });
+            it('encodes Float32Array', function () {
+                const arr = new Float32Array([22.1, 23.2, 24.3]);
+                const msg = { msg: arr };
+                const result = util.encodeObject(msg);
+                result.format.should.eql("Float32Array[3]");
+                const resultJson = JSON.parse(result.msg);
+                resultJson.should.have.property("__enc__", true);
+                resultJson.should.have.property("type", "array");
+                resultJson.should.have.property("data").which.be.an.Array();
+                resultJson.data[0].should.be.approximately(22.1, 0.00001);
+                resultJson.data[1].should.be.approximately(23.2, 0.00001);
+                resultJson.data[2].should.be.approximately(24.3, 0.00001);
+                resultJson.should.have.property("length", 3);
+            });
+            it('encodes Float64Array', function () {
+                const arr = new Float64Array([25.4, 26.5, 27.6]);
+                const msg = { msg: arr };
+                const result = util.encodeObject(msg);
+                result.format.should.eql("Float64Array[3]");
+                const resultJson = JSON.parse(result.msg);
+                resultJson.should.have.property("__enc__", true);
+                resultJson.should.have.property("type", "array");
+                resultJson.should.have.property("data").which.be.an.Array();
+                resultJson.data[0].should.be.approximately(25.4, 0.00001);
+                resultJson.data[1].should.be.approximately(26.5, 0.00001);
+                resultJson.data[2].should.be.approximately(27.6, 0.00001);
+                resultJson.should.have.property("length", 3);
+            });
+            it('encodes BigInt64Array', function () {
+                const arr = new BigInt64Array([BigInt(28), BigInt(29), BigInt(30)]);
+                const msg = { msg: arr };
+                const result = util.encodeObject(msg);
+                result.format.should.eql("BigInt64Array[3]");
+                const resultJson = JSON.parse(result.msg);
+                resultJson.should.have.property("__enc__", true);
+                resultJson.should.have.property("type", "array");
+                // BigInt arrays are stringified in JSON
+                resultJson.should.have.property("data").which.eql([
+                    { "__enc__": true, "data": "28", "type": "bigint" },
+                    { "__enc__": true, "data": "29", "type": "bigint" },
+                    { "__enc__": true, "data": "30", "type": "bigint" }
+                ]);
+                resultJson.should.have.property("length", 3);
+            });
+            it('encodes BigUint64Array', function () {
+                const arr = new BigUint64Array([BigInt(31), BigInt(32), BigInt(33)]);
+                const msg = { msg: arr };
+                const result = util.encodeObject(msg);
+                result.format.should.eql("BigUint64Array[3]");
+                const resultJson = JSON.parse(result.msg);
+                resultJson.should.have.property("__enc__", true);
+                resultJson.should.have.property("type", "array");
+                // BigInt arrays are stringified in JSON
+                resultJson.should.have.property("data").which.eql([
+                    { "__enc__": true, "data": "31", "type": "bigint" },
+                    { "__enc__": true, "data": "32", "type": "bigint" },
+                    { "__enc__": true, "data": "33", "type": "bigint" }
+                ]);
+                resultJson.should.have.property("length", 3);
+            });
+        });
 
         describe('encode object', function() {
             it('object', function() {
@@ -889,6 +1105,34 @@ describe("@node-red/util/util", function() {
                 resultJson.aSet.should.have.property("data",["a","b"]);
                 resultJson.aSet.should.have.property("length",2)
             });
+            it('object with typed array property (Int8Array)', function() {
+                const arr = new Int8Array([1, 2, 3]);
+                const msg = { msg: { anArray: arr } };
+                const result = util.encodeObject(msg);
+                result.format.should.eql("Object");
+                const resultJson = JSON.parse(result.msg);
+                resultJson.should.have.property("anArray");
+                resultJson.anArray.should.have.property("__enc__", true);
+                resultJson.anArray.should.have.property("type", "array");
+                resultJson.anArray.should.have.property("data", [1, 2, 3]);
+                resultJson.anArray.should.have.property("length", 3);
+            });
+            it('object with typed array property (BigInt64Array)', function() {
+                const arr = new BigInt64Array([10n, 20n, 30n]);
+                const msg = { msg: { anArray: arr } };
+                const result = util.encodeObject(msg);
+                result.format.should.eql("Object");
+                const resultJson = JSON.parse(result.msg);
+                resultJson.should.have.property("anArray");
+                resultJson.anArray.should.have.property("__enc__", true);
+                resultJson.anArray.should.have.property("type", "array");
+                resultJson.anArray.should.have.property("data", [
+                    { __enc__: true, data: "10", type: "bigint" },
+                    { __enc__: true, data: "20", type: "bigint" },
+                    { __enc__: true, data: "30", type: "bigint" }
+                ]);
+                resultJson.anArray.should.have.property("length", 3);
+            });
             it('constructor of IncomingMessage', function() {
                 function IncomingMessage(){};
                 var msg = { msg:new IncomingMessage() };
@@ -920,7 +1164,13 @@ describe("@node-red/util/util", function() {
                 var result = util.encodeObject(msg);
                 result.format.should.eql("array[1]");
                 var resultJson = JSON.parse(result.msg);
-                resultJson[0].should.eql('Error: encode error');
+                resultJson[0].should.have.property("__enc__",true);
+                resultJson[0].should.have.property("type","error");
+                resultJson[0].should.have.property("data");
+                resultJson[0].data.should.have.property("name","Error")
+                resultJson[0].data.should.have.property("message","encode error")
+                resultJson[0].data.should.have.property("stack")
+
             });
             it('long array in msg', function() {
                 var msg = {msg:{array:[1,2,3,4]}};
@@ -1006,7 +1256,7 @@ describe("@node-red/util/util", function() {
                 var resultJson = JSON.parse(result.msg);
                 resultJson.socket.should.eql('[internal]');
             });
-            it('object which fails to serialise', function(done) {
+            it('object which fails to serialise', function() {
                 var msg = {
                     msg: {
                         obj:{
@@ -1025,13 +1275,13 @@ describe("@node-red/util/util", function() {
                 };
                 var result = util.encodeObject(msg);
                 result.format.should.eql("error");
-                var success = (result.msg.indexOf('cantserialise') > 0);
-                success &= (result.msg.indexOf('this exception should have been caught') > 0);
-                success &= (result.msg.indexOf('canserialise') > 0);
-                success.should.eql(1);
-                done();
+                const resultJson = JSON.parse(result.msg);
+                resultJson.should.have.property("__enc__",true);
+                resultJson.should.have.property("type","error");
+                resultJson.should.have.property("data");
+                resultJson.data.should.have.property("message","encodeObject Error: this exception should have been caught")
             });
-            it('object which fails to serialise - different error type', function(done) {
+            it('object which fails to serialise - different error type', function() {
                 var msg = {
                     msg: {
                         obj:{
@@ -1048,45 +1298,15 @@ describe("@node-red/util/util", function() {
                         },
                     }
                 };
-                var result = util.encodeObject(msg);
+                const result = util.encodeObject(msg);
                 result.format.should.eql("error");
-                var success = (result.msg.indexOf('cantserialise') > 0);
-                success &= (result.msg.indexOf('this exception should have been caught') > 0);
-                success &= (result.msg.indexOf('canserialise') > 0);
-                success.should.eql(1);
-                done();
+                const resultJson = JSON.parse(result.msg);
+                resultJson.should.have.property("__enc__",true);
+                resultJson.should.have.property("type","error");
+                resultJson.should.have.property("data");
+                resultJson.data.should.have.property("message","encodeObject Error: this exception should have been caught")
             });
-            it('very large object which fails to serialise should be truncated', function(done) {
-                var msg = {
-                    msg: {
-                        obj:{
-                            big:"",
-                            cantserialise:{
-                                message:'this will not be displayed',
-                                toJSON: function(val) {
-                                    throw new Error('this exception should have been caught');
-                                    return 'should not display because we threw first';
-                                },
-                            },
-                            canserialise:{
-                                message:'this should be displayed',
-                            }
-                        },
-                    }
-                };
-
-                for (var i = 0; i < 1000; i++) {
-                    msg.msg.obj.big += 'some more string ';
-                }
-
-                var result = util.encodeObject(msg);
-                result.format.should.eql("error");
-                var resultJson = JSON.parse(result.msg);
-                var success = (resultJson.message.length <= 1000);
-                success.should.eql(true);
-                done();
-            });
-            it('test bad toString', function(done) {
+            it('test bad toString', function() {
                 var msg = {
                     msg: {
                         mystrangeobj:"hello",
@@ -1098,25 +1318,12 @@ describe("@node-red/util/util", function() {
                 msg.msg.constructor = { name: "strangeobj" };
 
                 var result = util.encodeObject(msg);
-                var success = (result.msg.indexOf('[Type not printable]') >= 0);
-                success.should.eql(true);
-                done();
+                const resultJson = JSON.parse(result.msg);
+                resultJson.should.have.property("__enc__",true);
+                resultJson.should.have.property("type","error");
+                resultJson.should.have.property("data");
+                resultJson.data.should.have.property("message","[Type not serializable]")
             });
-            it('test bad object constructor', function(done) {
-                var msg = {
-                    msg: {
-                        mystrangeobj:"hello",
-                        constructor: {
-                            get name(){
-                                throw new Error('Exception in constructor name');
-                            }
-                        }
-                    },
-                };
-                var result = util.encodeObject(msg);
-                done();
-            });
-
         });
     });
 

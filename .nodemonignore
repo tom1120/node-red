@@ -1,6 +1,0 @@
-/Gruntfile.js
-/.git/*
-*.backup
-/public/*
-*.log
-/postgres/*
