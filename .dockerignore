@@ -1,4 +1,57 @@
-node_modules/
-.idea/
-.github/
+# Git
+.git
+.gitignore
+
+# 文档
+README*.md
+LICENSE
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+SECURITY.md
+CITATION.cff
+CHANGELOG.md
+API.md
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# 测试
+test
+http_test
+
+# 日志
 *.log
+cs_*.log
+error_log.log
+file_logger*.log
+log-elk-error.log
+
+# 环境配置（保留所有 .env 文件）
+# 注意：.env 系列文件需要包含在镜像中，settings.js 会引用它们
+# .env.local - 仅本地开发使用，不包含
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Node
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 其他
+.nvmrc
+.jshintrc
+nodemon.json
+jsdoc.json
+.grunt
+coverage
+.nyc_output
+.DS_Store
+Thumbs.db
